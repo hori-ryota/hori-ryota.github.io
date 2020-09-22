@@ -1,4 +1,214 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Hori Blog RSS Feed]]></title><description><![CDATA[フリーランスでバックエンドエンジニアとして活動している Ryota Hori のブログです。ドメイン駆動設計や Go の話など。]]></description><link>https://hori-ryota.com</link><generator>GatsbyJS</generator><lastBuildDate>Tue, 22 Sep 2020 02:41:21 GMT</lastBuildDate><item><title><![CDATA[Gatsby.jsとBulmaでブログをリニューアルした]]></title><description><![CDATA[全然ブログを更新していなかったので久々に書こうと思い、勢いでリニューアルしました。これまではHugoを使っていたのですが、今回はGatsby.jsとBulmaを組み合わせてみました。 乗り換えにあたって検討したことと、Gatsby.jsとBulmaで苦労したこと、調整したことなどを残しておきます。]]></description><link>https://hori-ryota.com/blog/2020-09-22-revamp-blog-with-gatsby-and-bulma/</link><guid isPermaLink="false">https://hori-ryota.com/blog/2020-09-22-revamp-blog-with-gatsby-and-bulma/</guid><pubDate>Tue, 22 Sep 2020 03:00:00 GMT</pubDate><content:encoded>&lt;p&gt;全然ブログを更新していなかったので久々に書こうと思い、勢いでリニューアルしました。これまではHugoを使っていたのですが、今回はGatsby.jsとBulmaを組み合わせてみました。&lt;/p&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Hori Blog RSS Feed]]></title><description><![CDATA[フリーランスでバックエンドエンジニアとして活動している Ryota Hori のブログです。ドメイン駆動設計や Go の話など。]]></description><link>https://hori-ryota.com</link><generator>GatsbyJS</generator><lastBuildDate>Tue, 22 Sep 2020 13:22:30 GMT</lastBuildDate><item><title><![CDATA[dotfilesを刷新した（2020-09）]]></title><description><![CDATA[久々に開発環境のdotfilesを刷新したのでやったことのメモ。]]></description><link>https://hori-ryota.com/blog/2020-09-23-revamp-dotfiles-20200923/</link><guid isPermaLink="false">https://hori-ryota.com/blog/2020-09-23-revamp-dotfiles-20200923/</guid><pubDate>Tue, 22 Sep 2020 15:00:00 GMT</pubDate><content:encoded>&lt;p&gt;久々に開発環境のdotfilesを刷新したのでやったことのメモ。&lt;/p&gt;
+&lt;!--more--&gt;
+&lt;h2&gt;きっかけ&lt;/h2&gt;
+&lt;p&gt;メルカリさんの開発ライブ実況に触発された。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&quot;https://engineering.mercari.com/blog/entry/mercari_codecast_1/&quot;&gt;【解説】開発ライブ実況 #1 (Vim / Go) 編 by メルペイ Architect チーム Backend エンジニア #mercari_codecast | メルカリエンジニアリング&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;こういうコンテンツとっても好き。&lt;/p&gt;
+&lt;h2&gt;主に改善したかったところ&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;凝集度が低い&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;例えばHomebrewで入れるツールが &lt;code class=&quot;language-text&quot;&gt;brew.sh&lt;/code&gt; みたいなファイルにまとまっていて、付随する環境変数などの設定は別ファイルにあって…といった感じで凝集度が低いのが気に入らなかった&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;現にもう入れていないツールの設定などが残っていたりで良くない状態だった&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;使えていないツールやkey bindが多かった&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;ノイズになり便利で使うべきだったはずのものが埋もれてしまうので良くない&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;今回はすべての設定を把握している状態を目指し、定期的に掃除＆覚え直しがしやすい設計を目指しました。&lt;/p&gt;
+&lt;h2&gt;方針&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;shellは &lt;code class=&quot;language-text&quot;&gt;zsh&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;fish&lt;/code&gt; も使ってみたいけど文法が違うのを許容するほどのモチベーションは湧いていない&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;zshの設定ベースはprezto&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/sorin-ionescu/prezto&quot;&gt;sorin-ionescu/prezto: The configuration framework for Zsh&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;これは引き続き。設定もしやすいし速度も特に困っていないので続投。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;aliasや暗黙的な挙動は使いすぎない&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;preztoのmoduleも最低限。例えばpreztoのgitモジュールみたいに大量のaliasが設定されてしまうのは許容するけど、実用するaliasは基本的に自分で明示的に設定する。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;VimはNeovim&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/Shougo&quot;&gt;Shougo&lt;/a&gt;さんの &lt;code class=&quot;language-text&quot;&gt;de*&lt;/code&gt; 系ツールは積極利用&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;たまに互換性を失ったりバグが生じたりすることもあるけど速いし便利なので愛用している&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;grep系ツールを &lt;a href=&quot;https://github.com/ggreer/the_silver_searcher&quot;&gt;ggreer/the_silver_searcher&lt;/a&gt; から &lt;a href=&quot;https://github.com/BurntSushi/ripgrep&quot;&gt;BurntSushi/ripgrep&lt;/a&gt; に乗り換え。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;速いらしいので試しに。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;やったこと&lt;/h2&gt;
+&lt;p&gt;とりあえず現時点（2020-09-22）でのリポジトリがこちら。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/hori-ryota/dotfiles/tree/86f72179f49caa4016a5a86fb5fde31720287c83&quot;&gt;hori-ryota/dotfiles&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;やってよかったことで参考になりそうなところをメモがてら紹介してみます。&lt;/p&gt;
+&lt;h3&gt;凝集度を高めるためにインストール用スクリプトと設定ファイルをツールごとにまとめた&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;zsh/modules/&lt;/code&gt; 以下に欲求ごとにディレクトリを切り、 &lt;code class=&quot;language-text&quot;&gt;install.sh&lt;/code&gt; と &lt;code class=&quot;language-text&quot;&gt;export.zsh&lt;/code&gt; をそれぞれ置くことで凝集度を高めています。&lt;/p&gt;
+&lt;p&gt;インストール処理は &lt;code class=&quot;language-text&quot;&gt;init.sh&lt;/code&gt; で以下のようにすることで全ツールについて発火。&lt;/p&gt;
+
+        &lt;div class=&quot;gatsby-code-title&quot;&gt;
+          &lt;span&gt;init.sh&lt;/span&gt;
+        &lt;/div&gt;
+       
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;token for-or-select variable&quot;&gt;f&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;&lt;span class=&quot;token variable&quot;&gt;&lt;span class=&quot;token variable&quot;&gt;$(&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;dirname&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;&lt;span class=&quot;token variable&quot;&gt;${&lt;span class=&quot;token environment constant&quot;&gt;BASH_SOURCE&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:-&lt;/span&gt;$0}&lt;/span&gt;&quot;&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;)&lt;/span&gt;&lt;/span&gt;/zsh/modules/&quot;&lt;/span&gt;*&lt;span class=&quot;token string&quot;&gt;&quot;/install.sh&quot;&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;do&lt;/span&gt;
+  &lt;span class=&quot;token builtin class-name&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;Execute installation script &lt;span class=&quot;token variable&quot;&gt;${f}&lt;/span&gt;&quot;&lt;/span&gt;
+  &lt;span class=&quot;token function&quot;&gt;zsh&lt;/span&gt; -c &lt;span class=&quot;token string&quot;&gt;&quot;&lt;span class=&quot;token variable&quot;&gt;${f}&lt;/span&gt;&quot;&lt;/span&gt;
+  &lt;span class=&quot;token builtin class-name&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;Finish installation script &lt;span class=&quot;token variable&quot;&gt;${f}&lt;/span&gt;&quot;&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;done&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;また、 &lt;code class=&quot;language-text&quot;&gt;export.zsh&lt;/code&gt; についても &lt;code class=&quot;language-text&quot;&gt;zsh/modules/export.zsh&lt;/code&gt; で以下のように設定。&lt;/p&gt;
+
+        &lt;div class=&quot;gatsby-code-title&quot;&gt;
+          &lt;span&gt;zsh/modules/export.zsh&lt;/span&gt;
+        &lt;/div&gt;
+       
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;token for-or-select variable&quot;&gt;f&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;&lt;span class=&quot;token variable&quot;&gt;&lt;span class=&quot;token variable&quot;&gt;$(&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;dirname&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;&lt;span class=&quot;token variable&quot;&gt;${&lt;span class=&quot;token environment constant&quot;&gt;BASH_SOURCE&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:-&lt;/span&gt;$0}&lt;/span&gt;&quot;&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;)&lt;/span&gt;&lt;/span&gt;/&quot;&lt;/span&gt;*&lt;span class=&quot;token string&quot;&gt;&quot;/export.zsh&quot;&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;do&lt;/span&gt;
+  &lt;span class=&quot;token builtin class-name&quot;&gt;source&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;&lt;span class=&quot;token variable&quot;&gt;$f&lt;/span&gt;&quot;&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;done&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;これをpreztoの &lt;code class=&quot;language-text&quot;&gt;zprofile&lt;/code&gt; から以下のように読み込むことで一括して読み込んでいます。&lt;/p&gt;
+
+        &lt;div class=&quot;gatsby-code-title&quot;&gt;
+          &lt;span&gt;zprofile&lt;/span&gt;
+        &lt;/div&gt;
+       
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token builtin class-name&quot;&gt;source&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;&lt;span class=&quot;token environment constant&quot;&gt;$HOME&lt;/span&gt;/.zsh/modules/export.zsh&quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;凝集度を高めたおかげでどこで何が設定されているのかわからないものが全くなくなり、非常にやってよかったです。&lt;/p&gt;
+&lt;p&gt;また、環境変数の設定はツールのインストール時にも必要なもの（Go系ツールをインストールするときの &lt;code class=&quot;language-text&quot;&gt;$GOPATH&lt;/code&gt; とか）もありますが、各 &lt;code class=&quot;language-text&quot;&gt;install.sh&lt;/code&gt; から各 &lt;code class=&quot;language-text&quot;&gt;export.zsh&lt;/code&gt; を読み込むようにすることで安心して実行できるようになりました。&lt;/p&gt;
+&lt;p&gt;部分実行が気軽にできるようになったのでNode.jsなどのバージョン更新時も対応が楽です。&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;export.zsh&lt;/code&gt; が分割されていることによる読み込みのパフォーマンスは今のところは気になっていないですが、もし気になり始めたら各 &lt;code class=&quot;language-text&quot;&gt;export.zsh&lt;/code&gt; は結合して1ファイルにする処理を更新時に叩くフローを検討するつもりです。&lt;/p&gt;
+&lt;h3&gt;Powerlevel9kからPowerlevel10kに変えた&lt;/h3&gt;
+&lt;p&gt;昔も移行しようとして設定移植が面倒でやめたような気がしていたのですが、確認したら設定を変更せずに適用できるようだったのでpreztoの設定を書き換え。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/romkatv/powerlevel10k&quot;&gt;romkatv/powerlevel10k: A Zsh theme&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;問題なく動いている上、目に見えて速くなったのでやってよかったです。&lt;/p&gt;
+&lt;h3&gt;vim-goをやめた&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/fatih/vim-go&quot;&gt;fatih/vim-go: Go development plugin for Vim&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;vim-goは素晴らしいツールなのですが、LSP (&lt;a href=&quot;https://microsoft.github.io/language-server-protocol/&quot;&gt;Language Server Protocol&lt;/a&gt;) である &lt;a href=&quot;https://github.com/golang/tools/blob/master/gopls/README.md&quot;&gt;gopls&lt;/a&gt; が充実してきたことで必要性が薄くなったため卒業しました。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/golang/tools/blob/master/gopls/README.md&quot;&gt;gopls&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;vim-goには充実した機能で長らく非常にお世話になっていたのですが、多機能なだけに依存ツールの変更への対応が荒れることもありLSPのwrapperとしての役割も含めてすべてを網羅する巨大ツールとして今後進めていくのは厳しいのかなーと見ています。&lt;/p&gt;
+&lt;p&gt;今後は、基本的な機能はLSPを活用した上で、LSPにない機能のツールについては特化した小さなプラグインやスクリプトで対応していくのが良いかなーと思っています。&lt;/p&gt;
+&lt;p&gt;とりあえず今のところは &lt;code class=&quot;language-text&quot;&gt;goimports&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;gofmt&lt;/code&gt; の自動発火についてはmattnさんの &lt;a href=&quot;https://github.com/mattn/vim-goimports&quot;&gt;vim-goimports&lt;/a&gt; を使い、テストは &lt;a href=&quot;https://github.com/vim-test/vim-test&quot;&gt;vim-test/vim-test&lt;/a&gt; を使っています。&lt;/p&gt;
+&lt;p&gt;その他のツールについてはvim-testでも使われている &lt;a href=&quot;https://github.com/tpope/vim-dispatch&quot;&gt;tpope/vim-dispatch&lt;/a&gt; で発火しています。&lt;/p&gt;
+&lt;p&gt;今のところ大きな不満はないですが、vim-testの &lt;code class=&quot;language-text&quot;&gt;TestFile&lt;/code&gt; では子パッケージまでテストを走らせてしまうためそこだけ調整しようかと思っています。&lt;/p&gt;
+&lt;h3&gt;NeovimのSession機能を使い始めた&lt;/h3&gt;
+&lt;p&gt;NeovimにはSession機能があり、今開いている画面の構成などの状態を保存して後ほど開き直すことができます。&lt;/p&gt;
+&lt;p&gt;他のプロジェクト（リポジトリ）をちょっと確認して戻ってきたい、みたいなことが多いので、以下のような要件を満たす設定を整備してみました。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/x-motemen/ghq&quot;&gt;x-motemen/ghq&lt;/a&gt; で他のGit Repositoryを拾い、 &lt;a href=&quot;https://github.com/Shougo/denite.nvim&quot;&gt;Shougo/denite.nvim&lt;/a&gt; などのfuzzy finder系ツールで検索＆移動する&lt;/li&gt;
+&lt;li&gt;移動時にSession機能を使い、移動元の状態を保存する&lt;/li&gt;
+&lt;li&gt;移動時にSession機能を使い、移動先の状態を（存在したら）復元する&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;行って戻ってきたらさっきの状態、また行ったらさっきの状態、って感じで往復できます。便利。&lt;/p&gt;
+&lt;blockquote class=&quot;twitter-tweet&quot;&gt;&lt;p lang=&quot;ja&quot; dir=&quot;ltr&quot;&gt;&lt;a href=&quot;https://twitter.com/hashtag/mercari_codecast?src=hash&amp;amp;ref_src=twsrc%5Etfw&quot;&gt;#mercari_codecast&lt;/a&gt; に触発されてvimのsession機能を本格的に導入してるのだけどめっちゃ便利だな〜&lt;br&gt;&lt;br&gt;denite.nvimのvim-denite-ghqと組み合わせて、deniteでghq管理のプロジェクトを引いて、custom actionでcdとsessionファイルのload_or_createする感じで設定してみた。&lt;br&gt;複数リポジトリの開発捗りそう&lt;/p&gt;&amp;mdash; hori (@hori_ryota) &lt;a href=&quot;https://twitter.com/hori_ryota/status/1299266075113132035?ref_src=twsrc%5Etfw&quot;&gt;August 28, 2020&lt;/a&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;Deniteとghqでの設定が以下。&lt;/p&gt;
+
+        &lt;div class=&quot;gatsby-code-title&quot;&gt;
+          &lt;span&gt;dein.toml&lt;/span&gt;
+        &lt;/div&gt;
+       
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;vim&quot;&gt;&lt;pre class=&quot;language-vim&quot;&gt;&lt;code class=&quot;language-vim&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;let&lt;/span&gt; s&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;data_home &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;empty&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;$XDG_DATA_HOME&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;expand&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;~/.local/share&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; $XDG_DATA_HOME
+&lt;span class=&quot;token keyword&quot;&gt;let&lt;/span&gt; s&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;session_dir &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;g&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;denite_session_dir&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; s&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;data_home &lt;span class=&quot;token operator&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;/nvim/denite_session&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;isdirectory&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;s&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;session_dir&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;call&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;mkdir&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;s&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;session_dir&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;p&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;endif&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;!&lt;/span&gt; s&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;session_file_name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;target_dir&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; s&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;session_dir &lt;span class=&quot;token operator&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;/&apos;&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;trim&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;substitute&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;resolve&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;a&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;target_dir&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;/&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;-&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;g&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;-&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;.vim&apos;&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;endfunction&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;!&lt;/span&gt; s&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;save_session&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;target_dir&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  execute &lt;span class=&quot;token string&quot;&gt;&apos;mksession! &apos;&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;.&lt;/span&gt; s&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;session_file_name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;a&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;target_dir&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;endfunction&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;!&lt;/span&gt; s&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;load_or_create_session&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;target_dir&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;let&lt;/span&gt; s&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;file_name &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; s&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;session_file_name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;a&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;target_dir&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;filereadable&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;s&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;file_name&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    execute &lt;span class=&quot;token string&quot;&gt;&apos;source &apos;&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;.&lt;/span&gt; s&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;file_name
+    &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;endif&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;call&lt;/span&gt; s&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;save_session&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;a&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;target_dir&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;endfunction&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;!&lt;/span&gt; s&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;cdsession_action&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;context&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;call&lt;/span&gt; s&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;save_session&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;getcwd&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+
+  &lt;span class=&quot;token keyword&quot;&gt;let&lt;/span&gt; s&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;target &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; a&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;context&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;targets&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;let&lt;/span&gt; s&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token builtin&quot;&gt;path&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; s&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;target&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;action__path&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
+  execute &lt;span class=&quot;token string&quot;&gt;&apos;cd &apos;&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;.&lt;/span&gt; s&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token builtin&quot;&gt;path&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;call&lt;/span&gt; s&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;load_or_create_session&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;s&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token builtin&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;endfunction&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;call&lt;/span&gt; denite#custom#&lt;span class=&quot;token function&quot;&gt;action&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;directory&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;cdsession&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;s:cdsession_action&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;current directoryごとにSessionを保存し、Deniteでの移動時に移動元の保存と移動先の復元をしています。&lt;/p&gt;
+&lt;p&gt;また、廃棄したくなることもあるので以下のような掃除処理も仕込んでいます。&lt;/p&gt;
+
+        &lt;div class=&quot;gatsby-code-title&quot;&gt;
+          &lt;span&gt;dein.toml&lt;/span&gt;
+        &lt;/div&gt;
+       
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;vim&quot;&gt;&lt;pre class=&quot;language-vim&quot;&gt;&lt;code class=&quot;language-vim&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;!&lt;/span&gt; s&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;clean_session&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;target_dir&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;let&lt;/span&gt; s&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;file_name &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; s&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;session_file_name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;a&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;target_dir&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;filewritable&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;s&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;file_name&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;call&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;delete&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;s&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;file_name&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;endif&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;endfunction&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;!&lt;/span&gt; s&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;clean_session_action&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;context&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;let&lt;/span&gt; s&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;target &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; a&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;context&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;targets&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;let&lt;/span&gt; s&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token builtin&quot;&gt;path&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; s&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;target&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;action__path&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;call&lt;/span&gt; s&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;clean_session&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;s&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token builtin&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;endfunction&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;call&lt;/span&gt; denite#custom#&lt;span class=&quot;token function&quot;&gt;action&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;directory&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;clean_session&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;s:clean_session_action&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;is_quit&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;!&lt;/span&gt; s&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;clean_sessions&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;call&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;system&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;rm &apos;&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;.&lt;/span&gt; s&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;session_file_name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;*&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;endfunction&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;!&lt;/span&gt; s&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;clean_sessions_action&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;context&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;call&lt;/span&gt; s&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;clean_sessions&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;endfunction&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;call&lt;/span&gt; denite#custom#&lt;span class=&quot;token function&quot;&gt;action&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;directory&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;clean_allsession&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;s:clean_sessions_action&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;is_quit&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;vimscript扱い慣れてはいない＆自分用なのでしっかりしたデバッグはしていないですが、とりあえず期待通り動いています。&lt;/p&gt;
+&lt;p&gt;自分は作業の区切りですぐにまっさらな状態に掃除しちゃいたい派なのでNeovim起動時にSession復元などはしておらず、起動ディレクトリごとに保存先を分けたり命名管理などもせずに気軽に上書きしています。&lt;/p&gt;
+&lt;p&gt;この辺は好みがあると思うので良きに調整してください。&lt;/p&gt;
+&lt;h2&gt;以上&lt;/h2&gt;
+&lt;p&gt;今回は凝集度アップとスリム化が主目的だったのであまり新しく入れたものは無いのですが、やってよかった感は強かったので良かったことをメモしてみました。&lt;/p&gt;
+&lt;p&gt;もし参考になれば嬉しいです。また、おすすめの設定などあればぜひ紹介してください。&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Gatsby.jsとBulmaでブログをリニューアルした]]></title><description><![CDATA[全然ブログを更新していなかったので久々に書こうと思い、勢いでリニューアルしました。これまではHugoを使っていたのですが、今回はGatsby.jsとBulmaを組み合わせてみました。 乗り換えにあたって検討したことと、Gatsby.jsとBulmaで苦労したこと、調整したことなどを残しておきます。]]></description><link>https://hori-ryota.com/blog/2020-09-22-revamp-blog-with-gatsby-and-bulma/</link><guid isPermaLink="false">https://hori-ryota.com/blog/2020-09-22-revamp-blog-with-gatsby-and-bulma/</guid><pubDate>Tue, 22 Sep 2020 03:00:00 GMT</pubDate><content:encoded>&lt;p&gt;全然ブログを更新していなかったので久々に書こうと思い、勢いでリニューアルしました。これまではHugoを使っていたのですが、今回はGatsby.jsとBulmaを組み合わせてみました。&lt;/p&gt;
 &lt;p&gt;乗り換えにあたって検討したことと、Gatsby.jsとBulmaで苦労したこと、調整したことなどを残しておきます。&lt;/p&gt;
 &lt;!--more--&gt;
 &lt;h2&gt;HugoからGatsby.jsに乗り換えた理由&lt;/h2&gt;
@@ -2460,7 +2670,7 @@ renderers &lt;span class=&quot;token operator&quot;&gt;:=&lt;/span&gt; &lt;span 
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;間に合わなくなってきたら次述のように受信側を増やしていきます。&lt;/p&gt;
 &lt;h3&gt;送信側は1つ and 受信側は複数&lt;/h3&gt;
-&lt;p&gt;受け取り側の処理が1つじゃ追いつかない場合によく書く worker スタイル。ただの groutine 起動との違いは並列数の管理です。&lt;/p&gt;
+&lt;p&gt;受け取り側の処理が1つじゃ追いつかない場合によく書く worker スタイル。ただの goroutine 起動との違いは並列数の管理です。&lt;/p&gt;
 &lt;p&gt;送信側が1つなので、受信側が複数に増えても channel を close してあげれば問題なし。&lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;go&quot;&gt;&lt;pre class=&quot;language-go&quot;&gt;&lt;code class=&quot;language-go&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;worker&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;queue &lt;span class=&quot;token keyword&quot;&gt;chan&lt;/span&gt; Job&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
     &lt;span class=&quot;token keyword&quot;&gt;for&lt;/span&gt; j &lt;span class=&quot;token operator&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;range&lt;/span&gt; queue &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
