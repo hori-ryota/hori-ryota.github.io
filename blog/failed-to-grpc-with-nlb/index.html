@@ -47,7 +47,7 @@ RESET 用の packet ）を送出して接続を切るようです。</p>
     <span class="token function">keepAliveWithoutCalls</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">.</span>
     <span class="token function">build</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></div>
 <p>timeout が 350s なので半分弱くらいの 150s にしておきました。</p>
-<p>これで Client 側が 350s で切断される問題は解消したのですが、検証していたところなぜか 10m - 20m くらいの idle で切断される場合があることがわかりました。</p>
+<p>これで Client 側が 350s で切断される問題は解消したのですが、検証していたところなぜか 10min - 20min くらいの idle で切断される場合があることがわかりました。</p>
 <p>Server 側にも Keepalive の設定を追加することで解消しました。 Server は Go です。</p>
 <div class="gatsby-highlight" data-language="go"><pre class="language-go"><code class="language-go">server <span class="token operator">:=</span> grpc<span class="token punctuation">.</span><span class="token function">NewServer</span><span class="token punctuation">(</span>
     grpc<span class="token punctuation">.</span><span class="token function">KeepaliveParams</span><span class="token punctuation">(</span>keepalive<span class="token punctuation">.</span>ServerParameters<span class="token punctuation">{</span>
@@ -60,10 +60,10 @@ RESET 用の packet ）を送出して接続を切るようです。</p>
 <p>もし詳細をご存じの方、把握できた方がいらっしゃいましたらご教示願えると嬉しいです！</p>
 <h3>Keepalive を短時間にすることの弊害</h3>
 <p>今のところ問題なさそうですが、負荷などへの影響をちゃんと検証していないので不明です。</p>
-<h3>10m - 20m で切断される現象</h3>
+<h3>10min - 20min で切断される現象</h3>
 <p>何が原因なのかよくわかっておらず。検証した条件を載せておきます。</p>
 <ul>
-<li>1m, 5m, 6m, 10m, 20m, 30m 間隔で通信を行う6 connection を、並列して1台のサーバに対し接続した場合、 20m 以上でエラー</li>
+<li>1min, 5min, 6min, 10min, 20min, 30min 間隔で通信を行う6 connection を、並列して1台のサーバに対し接続した場合、 20min 以上でエラー</li>
 <li>NLB 経由せず Client - Server を直結した場合は生じない</li>
 </ul>
 <p>解せぬ。</p>
@@ -81,7 +81,7 @@ RESET 用の packet ）を送出して接続を切るようです。</p>
 	PermitWithoutStream <span class="token builtin">bool</span> <span class="token comment">// false by default.</span>
 <span class="token punctuation">}</span></code></pre></div>
 <p><code class="language-text">MinTime</code> 以下の Keepalive 間隔の Client がいた場合、接続を拒否するような設定に見えます。</p>
-<p>デフォルト値が 5m なので今回の 150s 設定だと切断されそうに思えるのですが、普通に接続されました。今後のバージョンアップで挙動が変わる可能性もあるので、正解を把握しておきたいところ。</p>
+<p>デフォルト値が 5min なので今回の 150s 設定だと切断されそうに思えるのですが、普通に接続されました。今後のバージョンアップで挙動が変わる可能性もあるので、正解を把握しておきたいところ。</p>
 <h2>以上</h2>
 <p>検証が済んでいなかったり最適設定といいきれる状態までまとめられていないのですが、 NLB 導入時に踏みそうな症状なのでいったん共有です。</p>
 <p>idle が長い connection に心あたりがある場合は検証してから本番導入をおすすめします。</p></div></div></article><nav class="pagination is-centered" role="navigation" aria-label="pagination"><a class="pagination-previous" href="/blog/golang-channel-pattern/"><div><span class="heading"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="angle-left" class="svg-inline--fa fa-angle-left fa-w-8 mr-2 has-text-grey-dark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><path fill="currentColor" d="M31.7 239l136-136c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9L127.9 256l96.4 96.4c9.4 9.4 9.4 24.6 0 33.9L201.7 409c-9.4 9.4-24.6 9.4-33.9 0l-136-136c-9.5-9.4-9.5-24.6-.1-34z"></path></svg>2017-12-01</span><span>Go の channel 処理パターン集</span></div></a><a class="pagination-next" href="/blog/cago-2-x-sync/"><div><span class="heading">2017-09-06<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="angle-right" class="svg-inline--fa fa-angle-right fa-w-8 ml-2 has-text-grey-dark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><path fill="currentColor" d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"></path></svg></span><span>CA.go #2 で golang.org/x/sync について喋りました #ca_go</span></div></a></nav></main></div><div class="column is-3-desktop"><div><aside><div class="has-text-centered"><figure class="image is-128x128 is-inline-block"><div class=" gatsby-image-wrapper" style="position:relative;overflow:hidden;display:inline-block;width:128px;height:128px"><img aria-hidden="true" src="data:image/jpeg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wgARCAAUABQDASIAAhEBAxEB/8QAGAABAQEBAQAAAAAAAAAAAAAAAAMFAgT/xAAVAQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEAMQAAABneszWeUYESzoJ//EABoQAAMBAQEBAAAAAAAAAAAAAAECAwASBBH/2gAIAQEAAQUCBYz86vOoz8zBsJZH6WhJbfd//8QAFxEAAwEAAAAAAAAAAAAAAAAAAAEQEf/aAAgBAwEBPwFG3//EABcRAAMBAAAAAAAAAAAAAAAAAAABEBH/2gAIAQIBAT8BZl//xAAeEAABAgcBAAAAAAAAAAAAAAABADEQERIgISJBUf/aAAgBAQAGPwLV0MzBeAQ6VV7Z/8QAHRAAAgMAAgMAAAAAAAAAAAAAAAERITEQQVFhcf/aAAgBAQABPyGBpDVJaIZt+jSWZR0zxJ4RSew1S8pcJljP/9oADAMBAAIAAwAAABCQz7//xAAWEQEBAQAAAAAAAAAAAAAAAAABESD/2gAIAQMBAT8QgG4f/8QAFhEBAQEAAAAAAAAAAAAAAAAAEQEg/9oACAECAQE/EEzD/8QAHRABAAMAAgMBAAAAAAAAAAAAAQARITFBEFFhkf/aAAgBAQABPxBpkj71qykMpprjnYP6SkhfnTFXZhs9LMe79wcwLF3XyGdw6OgPAVIHxn//2Q==" alt="avatar" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:1;transition-delay:500ms"/><noscript><picture><source type='image/webp' srcset="/static/f64e0e982ec744722a8720773a52ef44/cde37/profile-pic.webp 1x,
